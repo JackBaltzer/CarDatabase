@@ -7,18 +7,6 @@ namespace CarDatabase.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CarOwners",
-                columns: table => new
-                {
-                    CarId = table.Column<int>(type: "int", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CarOwners", x => new { x.CarId, x.OwnerId });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Models",
                 columns: table => new
                 {
@@ -63,6 +51,35 @@ namespace CarDatabase.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "CarOwners",
+                columns: table => new
+                {
+                    CarId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarOwners", x => new { x.CarId, x.OwnerId });
+                    table.ForeignKey(
+                        name: "FK_CarOwners_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CarOwners_Owners_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Owners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarOwners_OwnerId",
+                table: "CarOwners",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_ModelId",

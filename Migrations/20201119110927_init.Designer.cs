@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarDatabase.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20201119104707_init")]
+    [Migration("20201119110927_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,8 @@ namespace CarDatabase.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CarId", "OwnerId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("CarOwners");
                 });
@@ -91,6 +93,25 @@ namespace CarDatabase.Migrations
                         .HasForeignKey("ModelId");
 
                     b.Navigation("Model");
+                });
+
+            modelBuilder.Entity("CarDatabase.Models.CarOwners", b =>
+                {
+                    b.HasOne("CarDatabase.Models.Car", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarDatabase.Models.Owner", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }
